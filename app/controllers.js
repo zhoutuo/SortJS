@@ -5,13 +5,13 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
     $scope.random_len = "";
     $scope.input_array = "";
     $scope.selected_sorter = undefined;
+    var maxInputArrayLen = 100;
     $scope.randomGenerate = function() {
         if($scope.random_len === "" || isNaN(Number($scope.random_len))) {
             // default value of 10
             $scope.random_len = "10";
         }
         var len = parseInt($scope.random_len, 10);
-
         var randomInt = function(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         };
@@ -35,7 +35,7 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
             return;
         }
         //parse the input array
-        var nums = $scope.input_array.split(',');
+        var nums = $scope.input_array.split(',', maxInputArrayLen);
         for(var i = 0; i < nums.length; ++i) {
             //convert all strings to numbers
             nums[i] = Number(nums[i]);
@@ -49,6 +49,6 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
         $scope.$broadcast('run', {
             sorter: $scope.selected_sorter,
             numbers: nums
-        })
+        });
     };
 }]);

@@ -15,7 +15,9 @@
 </head>
 <body ng-controller="baseCtrl">
     <div class="row">
-        <div class="col-md-4 col-lg-4">
+        <div class="col-md-4 col-lg-4"
+             style="z-index: 2"
+             ng-hide="panel_visibility">
             <form>
                 <div class="form-group">
                     <h4>Select your sorting algorithm</h4>
@@ -23,7 +25,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <h4>Input your unsorted array separated by ','</h4>
+                    <h4>Input your unsorted array separated by ',' with max length of 100,
+                        elements beyond 100th will be ignored</h4>
                     <textarea class="form-control"
                               ng-model="input_array"></textarea>
                     <div class="row">
@@ -41,9 +44,15 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-8 col-lg-8">
-
+        <div class="col-md-1 col-lg-1"
+             style="z-index: 1"
+             ng-hide="!panel_visibility">
+            <button class="btn btn-info btn-xs"
+                    ng-click="rerun()">Rerun</button>
         </div>
+        <div class="col-md-12 col-lg-12"
+             style="z-index: 0"
+             visual_panel></div>
     </div>
 </body>
 </html>

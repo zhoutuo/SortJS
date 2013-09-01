@@ -5,6 +5,7 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
     $scope.random_len = "";
     $scope.input_array = "";
     $scope.selected_sorter = undefined;
+    $scope.panel_visibility = false;
     var maxInputArrayLen = 100;
     $scope.randomGenerate = function() {
         if($scope.random_len === "" || isNaN(Number($scope.random_len))) {
@@ -45,10 +46,20 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
                 return;
             }
         }
+        // toggle visibility
+        toggleVisibility();
         //fire the event
         $scope.$broadcast('run', {
             sorter: $scope.selected_sorter,
             numbers: nums
         });
     };
+
+    $scope.rerun = function() {
+        toggleVisibility();
+    };
+
+    function toggleVisibility() {
+        $scope.panel_visibility = !$scope.panel_visibility;
+    }
 }]);

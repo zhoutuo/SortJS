@@ -14,9 +14,10 @@
     <script src="app/services.js"></script>
 </head>
 <body ng-controller="baseCtrl">
-    <div class="row">
-        <div class="col-md-4 col-lg-4"
-             style="z-index: 2"
+    <div class="row"
+         style="position: relative">
+        <div class="col-md-4 col-lg-4 well"
+             style="z-index: 2; position: absolute"
              ng-hide="panel_visibility">
             <form>
                 <div class="form-group">
@@ -45,7 +46,7 @@
             </form>
         </div>
         <div class="col-md-1 col-lg-1"
-             style="z-index: 1"
+             style="z-index: 1; position: absolute"
              ng-hide="!panel_visibility">
             <button class="btn btn-info btn-xs"
                     ng-click="rerun()">Rerun</button>

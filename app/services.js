@@ -1,4 +1,13 @@
-'use strict';services.factory('notifier', [function() {
+'use strict';
+services.factory('sorters', [function() {
+    var factory = {};
+    var sorters = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+    factory.getSorters = function() {
+        return sorters;
+    };
+    return factory;
+}]);
+services.factory('notifier', [function() {
     var factory = {};
     factory.success = function(message, title) {
         if(title) {

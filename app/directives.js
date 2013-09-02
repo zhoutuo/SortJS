@@ -37,8 +37,6 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                     var curX = startingPos.x + curCol * rectWidth;
                     var curY = startingPos.y + curRow * rectHeight;
                     var rect = new Kinetic.Rect({
-                        x: curX,
-                        y: curY,
                         width: rectWidth,
                         height: rectHeight,
                         fill: 'lightblue',
@@ -50,15 +48,17 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                         text: numbers[i],
                         fill: 'black',
                         align: 'center',
-                        x: curX,
-                        y: curY + rectHeight / 2,
-                        width: rectWidth
+                        y: rectHeight / 2,
+                        width: rectWidth,
+                        name: 'value'
                     });
                     text.setOffset({
                         y: text.getHeight() / 2
                     });
                     // group them
                     var group = new Kinetic.Group({
+                        x: curX,
+                        y: curY,
                         name: elementName
                     });
                     group.add(rect);

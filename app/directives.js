@@ -108,6 +108,10 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                             runStep(i + 1);
                         }
                     });
+                    //move up first in case of covered by other blocks
+                    elemA.moveToTop();
+                    elemB.moveToTop();
+                    layer.draw();
                     tweenA.play();
                     tweenB.play();
 

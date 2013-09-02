@@ -1,9 +1,9 @@
 'use strict';
-directives.directive("visualPanel", ['sorters', function(sorters) {
+directives.directive("visualPanel", ['sorters', function (sorters) {
     return {
         restrict: 'A',
         scope: true,
-        link: function(scope, element) {
+        link: function (scope, element) {
             var stage,
                 layer,
                 rectWidth,
@@ -11,6 +11,7 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                 rowCount,
                 colCount = 10,
                 elementName = 'input_element';
+
             function createCanvas() {
                 stage = new Kinetic.Stage({
                     container: element[0], // raw dom element
@@ -18,6 +19,10 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                     height: 1000
                 });
                 layer = new Kinetic.Layer();
+            }
+
+            function cleanCanvas() {
+                layer.removeChildren();
             }
 
             function populateCanvas(numbers) {
@@ -31,7 +36,7 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                     y: stage.getHeight() * (1 - non_margin) / 2
                 };
                 // draw all rects
-                for(var i = 0; i < numbers.length; ++i) {
+                for (var i = 0; i < numbers.length; ++i) {
                     var curRow = Math.floor(i / colCount);
                     var curCol = i % colCount;
                     var curX = startingPos.x + curCol * rectWidth;
@@ -71,12 +76,57 @@ directives.directive("visualPanel", ['sorters', function(sorters) {
                 stage.add(layer);
             }
 
+            /**
+             *
+             * @param {Array} numbers
+             * @param {Function} sorter a sorting method
+             */
+            function runSorting(numbers, sorter) {
+                var steps = sorter(numbers);
+                var elements = stage.get('.' + elementName);
+                var runStep = function(i) {
+                    if(i >= numbers.length || i < 0) {
+                        return;
+                    }
+                    var left = steps[i][0];
+                    var right = steps[i][1];
+                    var elemA = elements[left];
+                    var elemB = elements[right];
+                    //tween
+                    var tweenA = new Kinetic.Tween({
+                        node: elemA,
+                        duration: 1,
+                        x: elemB.getX(),
+                        y: elemB.getY()
+                    });
+                    var tweenB = new Kinetic.Tween({
+                        node: elemB,
+                        duration: 1,
+                        x: elemA.getX(),
+                        y: elemA.getY(),
+                        onFinish: function() {
+                            runStep(i + 1);
+                        }
+                    });
+                    tweenA.play();
+                    tweenB.play();
+
+                    //only swap group ref
+                    elements[left] = elemB;
+                    elements[right] = elemA;
+                };
+                //run the steps
+                runStep(0);
+            }
+
             createCanvas();
 
-            scope.$on('run', function(event, args) {
+            scope.$on('run', function (event, args) {
                 var sorter = args.sorter;
                 var numbers = args.numbers;
+                cleanCanvas();
                 populateCanvas(numbers);
+                runSorting(numbers, sorters[sorter]);
             });
 
         }

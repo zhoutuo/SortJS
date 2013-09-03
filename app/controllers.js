@@ -5,6 +5,7 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
     $scope.random_len = "";
     $scope.input_array = "";
     $scope.selected_sorter = undefined;
+    $scope.ascending = true;
     $scope.panel_visibility = false;
     var maxInputArrayLen = 100;
     $scope.randomGenerate = function() {
@@ -51,7 +52,8 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
         //fire the event
         $scope.$broadcast('run', {
             sorter: $scope.selected_sorter,
-            numbers: nums
+            numbers: nums,
+            ascending: $scope.ascending
         });
     };
 

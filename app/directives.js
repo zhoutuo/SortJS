@@ -115,11 +115,9 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
 
             /**
              *
-             * @param {Array} numbers
-             * @param {Function} sorter a sorting method
+             * @param {sorters.SortResult} result
              */
-            function runSorting(numbers, sorter) {
-                var result = sorter(numbers);
+            function runSorting(result) {
                 var steps = result.steps;
                 var elements = stage.get('.' + elementName);
                 var runStep = function (i) {
@@ -189,9 +187,11 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             scope.$on('run', function (event, args) {
                 var sorter = args.sorter;
                 var numbers = args.numbers;
+                var ascending = args.ascending;
                 cleanCanvas();
                 populateCanvas(numbers);
-                runSorting(numbers, sorters[sorter]);
+                var result = sorters[sorter](numbers, ascending);
+                runSorting(result);
             });
 
             scope.$on('pause', function () {

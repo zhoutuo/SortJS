@@ -34,8 +34,13 @@
                         <button type="button"
                                 class="btn col-lg-4 col-md-4"
                                 ng-click="randomGenerate()">Random</button>
-                        <div class="col-lg-8 col-md-8">
+                        <div class="col-lg-4 col-md-4">
                             <input type="text" class="form-control" placeholder="Random Length" ng-model="random_len"/>
+                        </div>
+                        <div class="col-lg-4 col-md-4 checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="ascending"/> Ascending
+                            </label>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,12 @@
 services.factory('sorters', [function () {
     var factory = {};
     var sorters = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+    /**
+     * The class to contain the sorting result
+     * @param cmpCount
+     * @param steps
+     * @constructor
+     */
     factory.SortResult = function(cmpCount, steps) {
         this.comparisonCount = cmpCount;
         this.steps = steps;
@@ -16,7 +22,6 @@ services.factory('sorters', [function () {
      * @returns {sorters.SortResult} steps to sort numbers
      */
     factory.Bubble = function (numbers, ascending) {
-        ascending = ascending || true;
         var steps = [];
         var cmpCount = 0;
         // find ith biggest/smallest number
@@ -24,10 +29,8 @@ services.factory('sorters', [function () {
             var flag = false;
             // bubble up, stop at sorted section
             for (var j = 0; j < numbers.length - i - 1; ++j) {
-                var res = numbers[j] > numbers[j + 1];
                 ++cmpCount;
-                res *= ascending;
-                if (res) {
+                if (numbers[j] > numbers[j + 1] === ascending) {
                     //swap two element
                     //a, b => a+b, b=>a+b, a=>b, a
                     numbers[j] += numbers[j + 1];

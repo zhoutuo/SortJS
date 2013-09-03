@@ -10,8 +10,11 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 rectHeight = 80,
                 rowCount,
                 colCount = 10,
+                // tween A & B are used to swap two elements
                 tweenA,
                 tweenB,
+                // status bar is used to show the current swap info
+                statusBar,
                 elementName = 'input_element';
 
             function createCanvas() {
@@ -68,6 +71,13 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     text.setOffset({
                         y: text.getHeight() / 2
                     });
+                    // add original index
+                    var index = new Kinetic.Text({
+                        text: i,
+                        fill: 'green',
+                        align: 'center',
+                        width: rectWidth
+                    });
                     // group them
                     var group = new Kinetic.Group({
                         x: curX,
@@ -76,10 +86,18 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     });
                     group.add(rect);
                     group.add(text);
-
+                    group.add(index);
                     layer.add(group);
-
                 }
+                // add status bar
+                statusBar = new Kinetic.Text({
+                    width: element.width(),
+                    align: 'center',
+                    padding: 20,
+                    fontSize: 18,
+                    fill: 'coral'
+                });
+                layer.add(statusBar);
                 // draw layer
                 stage.add(layer);
             }
@@ -119,6 +137,9 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     //move up first in case of covered by other blocks
                     elemA.moveToTop();
                     elemB.moveToTop();
+                    //update status bar
+                    statusBar.setText('Element ' + left +
+                        ' is swapping with element ' + right + '.');
                     layer.draw();
                     playSorting();
 

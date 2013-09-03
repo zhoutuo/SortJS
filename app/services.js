@@ -2,6 +2,10 @@
 services.factory('sorters', [function () {
     var factory = {};
     var sorters = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+    factory.SortResult = function(cmpCount, steps) {
+        this.comparisonCount = cmpCount;
+        this.steps = steps;
+    };
     factory.getSorters = function () {
         return sorters;
     };
@@ -9,17 +13,19 @@ services.factory('sorters', [function () {
      * Implementation of bubble sorting
      * @param {Array} numbers
      * @param {Boolean} ascending sorting order
-     * @returns {Array} steps to sort numbers
+     * @returns {sorters.SortResult} steps to sort numbers
      */
     factory.Bubble = function (numbers, ascending) {
         ascending = ascending || true;
         var steps = [];
+        var cmpCount = 0;
         // find ith biggest/smallest number
         for (var i = 0; i < numbers.length; ++i) {
             var flag = false;
             // bubble up, stop at sorted section
             for (var j = 0; j < numbers.length - i - 1; ++j) {
                 var res = numbers[j] > numbers[j + 1];
+                ++cmpCount;
                 res *= ascending;
                 if (res) {
                     //swap two element
@@ -37,7 +43,7 @@ services.factory('sorters', [function () {
                 break;
             }
         }
-        return steps;
+        return new factory.SortResult(cmpCount, steps);
     };
     factory.Insertion = function () {
 

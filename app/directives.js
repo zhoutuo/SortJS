@@ -119,7 +119,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
              * @param {Function} sorter a sorting method
              */
             function runSorting(numbers, sorter) {
-                var steps = sorter(numbers);
+                var result = sorter(numbers);
+                var steps = result.steps;
                 var elements = stage.get('.' + elementName);
                 var runStep = function (i) {
                     if (i >= steps.length || i < 0) {
@@ -152,7 +153,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     statusBar.setText('Element ' + left +
                         ' is swapping with element ' + right + '.');
                     // update counting
-                    countingTxt.setText(i + 1 + "/" + steps.length);
+                    countingTxt.setText('Comparisons: ' + result.comparisonCount +
+                        '\nSwaps: ' + (i + 1) + "/" + steps.length);
                     layer.draw();
                     playSorting();
 

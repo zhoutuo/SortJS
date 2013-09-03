@@ -10,6 +10,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 rectHeight = 80,
                 rowCount,
                 colCount = 10,
+                tweenA,
+                tweenB,
                 elementName = 'input_element';
 
             function createCanvas() {
@@ -22,6 +24,12 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             }
 
             function cleanCanvas() {
+                if(tweenA) {
+                    tweenA.destroy();
+                }
+                if(tweenB) {
+                    tweenB.destroy();
+                }
                 layer.removeChildren();
             }
 
@@ -85,7 +93,7 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 var steps = sorter(numbers);
                 var elements = stage.get('.' + elementName);
                 var runStep = function(i) {
-                    if(i >= numbers.length || i < 0) {
+                    if(i >= steps.length || i < 0) {
                         return;
                     }
                     var left = steps[i][0];
@@ -93,13 +101,13 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     var elemA = elements[left];
                     var elemB = elements[right];
                     //tween
-                    var tweenA = new Kinetic.Tween({
+                    tweenA = new Kinetic.Tween({
                         node: elemA,
                         duration: 1,
                         x: elemB.getX(),
                         y: elemB.getY()
                     });
-                    var tweenB = new Kinetic.Tween({
+                    tweenB = new Kinetic.Tween({
                         node: elemB,
                         duration: 1,
                         x: elemA.getX(),

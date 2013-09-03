@@ -15,6 +15,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 tweenB,
                 // status bar is used to show the current swap info
                 statusBar,
+                // counting is used to count steps
+                countingTxt,
                 elementName = 'input_element';
 
             function createCanvas() {
@@ -55,7 +57,7 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     var rect = new Kinetic.Rect({
                         width: rectWidth,
                         height: rectHeight,
-                        fill: 'lightblue',
+                        fill: 'LightBlue',
                         stroke: 'black',
                         strokeWidth: 1
                     });
@@ -98,6 +100,15 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     fill: 'coral'
                 });
                 layer.add(statusBar);
+                // add counting
+                countingTxt = new Kinetic.Text({
+                    width: element.width(),
+                    align: 'right',
+                    padding: 20,
+                    fontSize: 18,
+                    fill: 'LimeGreen'
+                });
+                layer.add(countingTxt);
                 // draw layer
                 stage.add(layer);
             }
@@ -140,6 +151,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     //update status bar
                     statusBar.setText('Element ' + left +
                         ' is swapping with element ' + right + '.');
+                    // update counting
+                    countingTxt.setText(i + 1 + "/" + steps.length);
                     layer.draw();
                     playSorting();
 

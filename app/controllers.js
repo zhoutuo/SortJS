@@ -59,6 +59,17 @@ controllers.controller('baseCtrl', ['$scope', 'notifier', 'sorters', function($s
         toggleVisibility();
     };
 
+    $scope.togglePlayAction = 'pause';
+    $scope.togglePlay = function() {
+        if($scope.togglePlayAction === 'pause') {
+            $scope.$broadcast('pause');
+            $scope.togglePlayAction = 'play';
+        } else {
+            $scope.$broadcast('play');
+            $scope.togglePlayAction = 'pause';
+        }
+    };
+
     function toggleVisibility() {
         $scope.panel_visibility = !$scope.panel_visibility;
     }

@@ -24,10 +24,10 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             }
 
             function cleanCanvas() {
-                if(tweenA) {
+                if (tweenA) {
                     tweenA.destroy();
                 }
-                if(tweenB) {
+                if (tweenB) {
                     tweenB.destroy();
                 }
                 layer.removeChildren();
@@ -92,8 +92,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             function runSorting(numbers, sorter) {
                 var steps = sorter(numbers);
                 var elements = stage.get('.' + elementName);
-                var runStep = function(i) {
-                    if(i >= steps.length || i < 0) {
+                var runStep = function (i) {
+                    if (i >= steps.length || i < 0) {
                         return;
                     }
                     var left = steps[i][0];
@@ -112,7 +112,7 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                         duration: 1,
                         x: elemA.getX(),
                         y: elemA.getY(),
-                        onFinish: function() {
+                        onFinish: function () {
                             runStep(i + 1);
                         }
                     });
@@ -120,8 +120,7 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     elemA.moveToTop();
                     elemB.moveToTop();
                     layer.draw();
-                    tweenA.play();
-                    tweenB.play();
+                    playSorting();
 
                     //only swap group ref
                     elements[left] = elemB;
@@ -129,6 +128,24 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 };
                 //run the steps
                 runStep(0);
+            }
+
+            function pauseSorting() {
+                if (tweenA) {
+                    tweenA.pause();
+                }
+                if (tweenB) {
+                    tweenB.pause();
+                }
+            }
+
+            function playSorting() {
+                if (tweenA) {
+                    tweenA.play();
+                }
+                if (tweenB) {
+                    tweenB.play();
+                }
             }
 
             createCanvas();
@@ -141,6 +158,13 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 runSorting(numbers, sorters[sorter]);
             });
 
+            scope.$on('pause', function () {
+                pauseSorting();
+            });
+
+            scope.$on('play', function () {
+                playSorting();
+            });
         }
     };
 }]);

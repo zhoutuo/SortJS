@@ -48,8 +48,30 @@ services.factory('sorters', [function () {
         }
         return new factory.SortResult(cmpCount, steps);
     };
-    factory.Insertion = function () {
+    factory.Insertion = function (numbers, ascending) {
+        var steps = [];
+        var cmpCount = 0;
+        for(var i = 1; i < numbers.length; ++i) {
+            for(var j = 0; j < i; ++j) {
+                ++cmpCount;
+                // if j is the place the insert
+                if(numbers[j] > numbers[i] === ascending) {
+                    // store the value of i
+                    var tmp = numbers[i];
+                    // shift numbers from j to i - 1
+                    for(var z = i; z > j; --z) {
+                        numbers[z] = numbers[z - 1];
+                    }
+                    numbers[j] = tmp;
 
+                    // add to step
+                    var curStep = [j, i];
+                    steps.push(curStep);
+                    break;
+                }
+            }
+        }
+        return new factory.SortResult(cmpCount, steps);
     };
     factory.Merge = function () {
 

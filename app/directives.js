@@ -10,9 +10,8 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                 rectHeight = 80,
                 rowCount,
                 colCount = 10,
-                // tween A & B are used to swap two elements
-                tweenA,
-                tweenB,
+                // tweenGroup is used to present the tweens
+                tweensGroup,
                 // status bar is used to show the current swap info
                 statusBar,
                 // counting is used to count steps
@@ -29,12 +28,10 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             }
 
             function cleanCanvas() {
-                if (tweenA) {
-                    tweenA.destroy();
+                if(tweensGroup) {
+                    tweensGroup.destroy();
                 }
-                if (tweenB) {
-                    tweenB.destroy();
-                }
+
                 layer.removeChildren();
             }
 
@@ -124,61 +121,57 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     if (i >= steps.length || i < 0) {
                         return;
                     }
-                    var left = steps[i][0];
-                    var right = steps[i][1];
-                    var elemA = elements[left];
-                    var elemB = elements[right];
-                    //tween
-                    tweenA = new Kinetic.Tween({
-                        node: elemA,
-                        duration: 1,
-                        x: elemB.getX(),
-                        y: elemB.getY()
-                    });
-                    tweenB = new Kinetic.Tween({
-                        node: elemB,
-                        duration: 1,
-                        x: elemA.getX(),
-                        y: elemA.getY(),
-                        onFinish: function () {
-                            runStep(i + 1);
+                    var tweens = [];
+                    var curStep = steps[i];
+                    for(var j = 0; j < curStep.length; ++j) {
+                        var current = curStep[j];
+                        var next = curStep[(j + 1) % curStep.length]; // circular
+                        var elemA = elements[current];
+                        var elemB = elements[next];
+                        tweens.push(new Kinetic.Tween({
+                            node: elemA,
+                            duration: 1,
+                            x: elemB.getX(),
+                            y: elemB.getY()
+                        }));
+                        //push to the top in case of being covered
+                        elemA.moveToTop();
+                    }
+
+                    tweensGroup = new TweensGroup(tweens, function() {
+                        //swap ref
+                        var tmp = elements[curStep[0]];
+                        for(var j = 0; j < curStep.length - 1; ++j) {
+                            elements[curStep[j]] = elements[curStep[j + 1]];
                         }
+                        //last one
+                        elements[curStep[curStep.length - 1]] = tmp;
+
+                        // next step
+                        runStep(i + 1);
                     });
-                    //move up first in case of covered by other blocks
-                    elemA.moveToTop();
-                    elemB.moveToTop();
-                    //update status bar
-                    statusBar.setText('Element ' + left +
-                        ' is swapping with element ' + right + '.');
+
                     // update counting
                     countingTxt.setText('Comparisons: ' + result.comparisonCount +
                         '\nSwaps: ' + (i + 1) + "/" + steps.length);
                     layer.draw();
-                    playSorting();
+                    // play the tweens
+                    tweensGroup.play();
 
-                    //only swap group ref
-                    elements[left] = elemB;
-                    elements[right] = elemA;
                 };
                 //run the steps
                 runStep(0);
             }
 
             function pauseSorting() {
-                if (tweenA) {
-                    tweenA.pause();
-                }
-                if (tweenB) {
-                    tweenB.pause();
+                if (tweensGroup) {
+                    tweensGroup.pause();
                 }
             }
 
             function playSorting() {
-                if (tweenA) {
-                    tweenA.play();
-                }
-                if (tweenB) {
-                    tweenB.play();
+                if (tweensGroup) {
+                    tweensGroup.play();
                 }
             }
 
@@ -201,6 +194,47 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
             scope.$on('play', function () {
                 playSorting();
             });
+
+            /**
+             * This is a wrapper to present multiple tweens
+             * providing unified API to all of the tweens
+             * @param tweens
+             * @constructor
+             */
+            function TweensGroup(tweens, onFinish) {
+                this.tweens = tweens;
+                var finishCount = 0;
+                var finish = function() {
+                    ++finishCount;
+                    if(finishCount === tweens.length) {
+                        // fire
+                        onFinish();
+                    }
+                };
+
+                //add finish event
+                for(var i = 0; i < this.tweens.length; ++i) {
+                    this.tweens[i].onFinish = finish;
+                }
+
+                this.play = function() {
+                    for(var i = 0; i < this.tweens.length; ++i) {
+                        this.tweens[i].play();
+                    }
+                }
+
+                this.pause = function() {
+                    for(var i = 0; i < this.tweens.length; ++i) {
+                        this.tweens[i].pause();
+                    }
+                }
+
+                this.destroy = function() {
+                    for(var i = 0; i < this.tweens.length; ++i) {
+                        this.tweens[i].destroy();
+                    }
+                }
+            }
         }
     };
 }]);

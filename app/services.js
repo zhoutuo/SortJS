@@ -30,7 +30,9 @@ services.factory('sorters', [function () {
             // bubble up, stop at sorted section
             for (var j = 0; j < numbers.length - i - 1; ++j) {
                 ++cmpCount;
-                if (numbers[j] > numbers[j + 1] === ascending) {
+                // exclude equality case
+                if (numbers[j] > numbers[j + 1] === ascending &&
+                    numbers[j] < numbers[j + 1] !== ascending) {
                     //swap two element
                     //a, b => a+b, b=>a+b, a=>b, a
                     numbers[j] += numbers[j + 1];
@@ -55,7 +57,8 @@ services.factory('sorters', [function () {
             for(var j = 0; j < i; ++j) {
                 ++cmpCount;
                 // if j is the place the insert
-                if(numbers[j] > numbers[i] === ascending) {
+                if(numbers[j] > numbers[i] === ascending &&
+                    numbers[j] < numbers[i] !== ascending) {
                     // store the value of i
                     var tmp = numbers[i];
                     // shift numbers from j to i - 1

@@ -21,32 +21,41 @@
              ng-hide="panel_visibility">
             <form>
                 <div class="form-group">
-                    <h4>Select your sorting algorithm</h4>
-                    <select class="form-control" ng-model="selected_sorter" ng-options="v for v in algos" required="">
+                    <label>Select your sorting algorithm</label>
+                    <select class="form-control"
+                            ng-model="selected_sorter"
+                            ng-options="v for v in algos"
+                            required="">
                     </select>
                 </div>
                 <div class="form-group">
-                    <h4>Input your unsorted array separated by ',' with max length of 100,
-                        elements beyond 100th will be ignored</h4>
-                    <textarea class="form-control"
-                              ng-model="input_array"></textarea>
-                    <div class="row">
+                    <div class="form-group">
+                        <label>Input your unsorted array separated by ',' with max length of 100,
+                            elements beyond 100th will be ignored</label>
+                        <textarea class="form-control"
+                                  rows="3"
+                                  ng-model="input_array"></textarea>
+                    </div>
+                    <div class="form-group">
                         <button type="button"
                                 class="btn col-lg-4 col-md-4"
-                                ng-click="randomGenerate()">Random</button>
-                        <div class="col-lg-4 col-md-4">
+                                ng-click="randomGenerate()">Random
+                        </button>
+                        <div class="col-lg-5 col-md-5">
                             <input type="text" class="form-control" placeholder="Random Length" ng-model="random_len"/>
                         </div>
-                        <div class="col-lg-4 col-md-4 checkbox">
+                        <div class="col-lg-3 col-md-3 checkbox">
                             <label>
                                 <input type="checkbox" ng-model="ascending"/> Ascending
                             </label>
                         </div>
+
                     </div>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary btn-lg"
-                            ng-click="run()">Run</button>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-lg btn-block"
+                                ng-click="run()">Run
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -79,8 +79,62 @@ services.factory('sorters', [function () {
         }
         return new factory.SortResult(cmpCount, steps);
     };
-    factory.Merge = function () {
+    factory.Merge = function (numbers, ascending) {
+        var cmpCount = 0;
+        var steps = [];
+        var merge = function(numbers, ascending, offset) {
+            // special case, already sorted
+            if(numbers.length === 1 || numbers.length === 0) {
+                return numbers;
+            }
+            var middle = Math.floor(numbers.length / 2);
+            //divide
+            var left = merge(numbers.slice(0, middle), ascending, offset);
+            var right = merge(numbers.slice(middle, numbers.length), ascending, offset + middle);
+            // combine
+            var res = [];
+            var leftidx = 0;
+            var rightidx = 0;
+            while(leftidx < left.length && rightidx < right.length) {
+                ++cmpCount;
+                var left_top = left[leftidx];
+                var right_top = right[rightidx];
+                if(left_top < right_top === ascending ||
+                    left_top > right_top === !ascending) {
+                    res.push(left_top);
+                    // add step
+//                    steps.push([leftidx + offset, res.length - 1 + offset]);
+                    //move forward
+                    ++leftidx;
+                } else {
+                    res.push(right_top);
+                    // add step
+//                    steps.push([left.length + rightidx - 1 + offset, res.length - 1 + offset]);
+                    //move forward
+                    ++rightidx;
+                }
+            }
+            // appending the rest if exists
+            if(leftidx != left.length) {
+                for(var i = leftidx; i < left.length; ++i) {
+                    res.push(left[i]);
+                    steps.push([i + offset, res.length - 1 + offset]);
+                }
+            }
+            // appending the rest if exists
+            if(rightidx != right.length) {
+                for(var i = rightidx; i < right.length; ++i) {
+                    res.push(right[i]);
+                    steps.push([i + offset + left.length - 1, res.length - 1 + offset]);
+                }
 
+            }
+            return res;
+        };
+        // run the algorithm
+        console.log(merge(numbers, ascending, 0));
+        console.log(steps);
+        return new factory.SortResult(cmpCount, steps);
     };
     factory.Quick = function () {
 

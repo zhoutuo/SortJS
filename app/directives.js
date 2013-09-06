@@ -124,14 +124,9 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
                     }
                     var tweens = [];
                     var curStep = steps[i];
-                    for(var j = curStep[0]; j <= curStep[1]; ++j) {
-                        var current = j;
-                        var next;
-                        if (j === curStep[1]) {
-                            next = curStep[0];
-                        } else {
-                            next = j + 1;
-                        }
+                    for(var j = 0; j < curStep.length; ++j) {
+                        var current = curStep[j];
+                        var next = curStep[(j + 1) % curStep.length];
                         var elemA = elements[current];
                         var elemB = elements[next];
                         tweens.push(new Kinetic.Tween({
@@ -146,9 +141,9 @@ directives.directive("visualPanel", ['sorters', function (sorters) {
 
                     tweensGroup = new TweensGroup(tweens, function() {
                         //swap ref
-                        var tmp = elements[curStep[1]];
-                        for(var j = curStep[1]; j > curStep[0]; --j) {
-                            elements[j] = elements[j - 1];
+                        var tmp = elements[curStep[curStep.length - 1]];
+                        for(var j = curStep.length - 1; j >= 0; --j) {
+                            elements[curStep[j]] = elements[curStep[j - 1]];
                         }
                         //last one
                         elements[curStep[0]] = tmp;

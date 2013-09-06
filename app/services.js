@@ -68,7 +68,10 @@ services.factory('sorters', [function () {
                     numbers[j] = tmp;
 
                     // add to step
-                    var curStep = [j, i];
+                    var curStep = [];
+                    for(var z = j; z <= i; ++z) {
+                        curStep.push(z);
+                    }
                     steps.push(curStep);
                     break;
                 }

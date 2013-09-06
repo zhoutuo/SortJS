@@ -1,7 +1,7 @@
 'use strict';
 services.factory('sorters', [function () {
     var factory = {};
-    var sorters = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+    var sorters = ['Bubble', 'Insertion'];
     /**
      * The class to contain the sorting result
      * @param cmpCount
